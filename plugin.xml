@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+           id="com.mrboss.posapp.apossdk"
+      version="0.0.1">
+
+    <name>Android apossdk</name>
+    <description>Cordova Android apossdk Plugin</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,android,apossdk</keywords>
+    <repo>https://github.com/ZhichengChen/cordova-plugin-android-apossdk.git</repo>
+    <issue>https://github.com/ZhichengChen/cordova-plugin-android-apossdk/issues</issue>
+
+    <js-module src="www/apossdk.js" name="apossdk">
+        <merges target="navigator.apossdk" />
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="apossdk">
+                <param name="android-package" value="com.mrboss.posapp.apossdk.apossdk"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/APOS.jar" target-dir="src/com/mrboss/posapp/apossdk" />
+        <source-file src="src/android/apossdk.java" target-dir="src/com/mrboss/posapp/apossdk" />
+
+    </platform>
+
+</plugin>

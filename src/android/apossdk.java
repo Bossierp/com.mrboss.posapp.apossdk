@@ -60,14 +60,23 @@ public class apossdk extends CordovaPlugin {
             catch (AposException e) {
                 // TODO Auto-generated catch block
                 // Alert(e.getMessage());
-                Alert("Error Code:" + String.valueOf(e.getErrorStatus()));
+                int errstatus = e.getErrorStatus(); 
+                // if(errstatus== AposException.ERR_OPEN){ 
+                //     Alert("连接打印机失败");
+                // }
+                // else{
+                //     Alert("未知错误");
+                // }
+                callbackContext.error(errstatus);
                 return false;
             }
             catch (Exception e) {
-                Alert(e.getMessage());
+                callbackContext.error(e.getMessage());
+                // Alert(e.getMessage());
                 // Alert(e.getMessage());
                 return false;
             }
+            callbackContext.success(200);
             return true;
         }
         return false;  

@@ -44,32 +44,32 @@ public class apossdk extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if ("TestPrint".equals(action)) {
             try {            
-                Print printer = new Print(getApplicationContext());
+                Print printer = new Print(cordova.getActivity());
                 printer.openPrinter(Print.DEVTYPE_USB, "RTPSO", 0, 0);
 
                 Builder build = new Builder("RTPSO", Builder.MODEL_ANK);
-                        int []status = {1};
-                        byte clear[] = {0x1b,0x40};
-                        build.addCommand(clear);
-                        build.addTextAlign(Builder.ALIGN_CENTER);
-                        build.addText("123xxstreet,xxxcity,xxxxstate\n");
-                        build.addCut(Builder.CUT_FEED);
-                        printer.sendData(build, 1000, status);
-                        build.clearCommandBuffer();
+                int []status = {1};
+                byte clear[] = {0x1b,0x40};
+                build.addCommand(clear);
+                build.addTextAlign(Builder.ALIGN_CENTER);
+                build.addText("123xxstreet,xxxcity,xxxxstate\n");
+                build.addCut(Builder.CUT_FEED);
+                printer.sendData(build, 1000, status);
+                build.clearCommandBuffer();
             }
             catch (AposException e) {
                 // TODO Auto-generated catch block
-                Alert(e.getMessage());
-                connect = false;
-                break;
+                // Alert(e.getMessage());
+                Alert("Error Code:" + String.valueOf(e.getErrorStatus()));
+                return false;
             }
             catch (Exception e) {
                 Alert(e.getMessage());
+                // Alert(e.getMessage());
                 return false;
             }
             return true;
         }
-        Log.e(LOG_TAG, "Called invalid action: "+action);
         return false;  
     }
 

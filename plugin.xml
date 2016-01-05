@@ -23,7 +23,7 @@
             </feature>
         </config-file>
 
-        <source-file src="src/android/APOS.jar" target-dir="src/com/mrboss/posapp/apossdk" />
+        <source-file src="src/android/APOS.jar" target-dir="libs" />
         <source-file src="src/android/apossdk.java" target-dir="src/com/mrboss/posapp/apossdk" />
 
     </platform>

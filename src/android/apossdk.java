@@ -29,6 +29,9 @@ import org.apache.cordova.PluginResult;
 import java.io.IOException;
 import java.io.InputStream;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Context;
 import android.app.AlertDialog;
 
 import com.apos.aposprinter.*;
@@ -41,7 +44,7 @@ public class apossdk extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if ("TestPrint".equals(action)) {
             try {            
-                Print printer = new Print(getApplicationContext())   
+                Print printer = new Print(getApplicationContext());
                 printer.openPrinter(Print.DEVTYPE_USB, "RTPSO", 0, 0);
 
                 Builder build = new Builder("RTPSO", Builder.MODEL_ANK);

@@ -43,57 +43,52 @@ public class apossdk extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if ("TestPrint".equals(action)) {
-            try {            
+            try {
                 Print printer = new Print(cordova.getActivity());
                 printer.openPrinter(Print.DEVTYPE_USB, "RTPSO", 0, 0);
 
-                Builder build = new Builder("RTPSO", Builder.MODEL_ANK);
-                int []status = {1};
-                byte clear[] = {0x1b,0x40};
-                build.addCommand(clear);
-                build.addTextAlign(Builder.ALIGN_CENTER);
-                build.addText("123xxstreet,xxxcity,xxxxstate\n");
-                build.addCut(Builder.CUT_FEED);
-                printer.sendData(build, 1000, status);
-                build.clearCommandBuffer();
-            }
-            catch (AposException e) {
+                TestPrint(printer);
+            } catch (AposException e) {
                 // TODO Auto-generated catch block
-                // Alert(e.getMessage());
-                int errstatus = e.getErrorStatus(); 
-                // if(errstatus== AposException.ERR_OPEN){ 
-                //     Alert("连接打印机失败");
-                // }
-                // else{
-                //     Alert("未知错误");
-                // }
+                int errstatus = e.getErrorStatus();
                 callbackContext.error(errstatus);
                 return false;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 callbackContext.error(e.getMessage());
-                // Alert(e.getMessage());
-                // Alert(e.getMessage());
                 return false;
             }
             callbackContext.success(200);
             return true;
         }
-        return false;  
+        return false;
     }
 
-    private void Alert(String msg){
+    private void Alert(String msg) {
         Dialog alertDialog = new AlertDialog.Builder(this.cordova.getActivity()).
-                setTitle("对话框的标题").
-                setMessage(msg).
-                setCancelable(false).
-                setNegativeButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // TODO Auto-generated method stub
-                    }
-                }).
-                create();
+        setTitle("对话框的标题").
+        setMessage(msg).
+        setCancelable(false).
+        setNegativeButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+            }
+        }).
+        create();
         alertDialog.show();
+    }
+    public void TestPrint(Print printer) throws AposException {
+        Builder build = new Builder("RTPSO", Builder.MODEL_ANK);
+        int []status = {1};
+        byte clear[] = {0x1b, 0x40};
+        build.addCommand(clear);
+        build.addTextAlign(Builder.ALIGN_CENTER);
+        build.addText("打印测试\n");
+        build.addText("列印測試\n");
+        build.addText("Print Test\n");
+        build.addText("テスト印刷\n");
+        build.addCut(Builder.CUT_FEED);
+        printer.sendData(build, 1000, status);
+        build.clearCommandBuffer();
     }
 }

@@ -34,6 +34,9 @@ module.exports = {
      * @param {Function} completeCallback   The callback that is called when user clicks on a button.
      * @param {Function} completeCallback   The callback that is called when user clicks on a button.
      */
+    Print: function(printstr, successCallback, errorCallback) {
+        exec(successCallback, errorCallback, 'apossdk', 'Print', [printstr, successCallback, errorCallback]);
+    }
     TestPrint: function(successCallback, errorCallback) {
         exec(successCallback, errorCallback, 'apossdk', 'TestPrint', [successCallback, errorCallback]);
     }

@@ -114,13 +114,17 @@ public class apossdk extends CordovaPlugin {
         Print printer = new Print(cordova.getActivity());
         printer.openPrinter(Print.DEVTYPE_USB, "RTPSO", 0, 0);
         Builder build = new Builder("RTPSO", Builder.MODEL_CHINESE);
-        String[] printArr = printtext.split("!#%");
-        for (int i = 0; i < printArr.length; i++) {
-            String[] oneprint = printArr[i].split("@$^");
-            if (oneprint.length > 0) {
-                ExplainComment(build, oneprint);
-            }
-        }
+        // String[] printArr = printtext.split("!#%");
+        // for (int i = 0; i < printArr.length; i++) {
+        //     String[] oneprint = printArr[i].split("@$^");
+        //     if (oneprint.length > 0) {
+        //         ExplainComment(build, oneprint);
+        //     }
+        // }
+        byte clear[] = {0x1b, 0x40};
+        build.addCommand(clear);
+        build.addText(printtext + "ss\n");
+        build.addCut(Builder.CUT_FEED);
         int []status = {1};
         printer.sendData(build, 1000, status);
         build.clearCommandBuffer();

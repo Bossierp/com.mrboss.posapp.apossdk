@@ -36,7 +36,7 @@ module.exports = {
      */
     Print: function(printstr, successCallback, errorCallback) {
         exec(successCallback, errorCallback, 'apossdk', 'Print', [printstr, successCallback, errorCallback]);
-    }
+    },
     TestPrint: function(successCallback, errorCallback) {
         exec(successCallback, errorCallback, 'apossdk', 'TestPrint', [successCallback, errorCallback]);
     }

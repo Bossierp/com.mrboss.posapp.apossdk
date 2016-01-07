@@ -65,6 +65,7 @@ public class apossdk extends CordovaPlugin {
             callbackContext.error(e.getMessage());
             return false;
         }
+        callbackContext.error("No This Method");
         return false;
     }
 
@@ -114,62 +115,67 @@ public class apossdk extends CordovaPlugin {
         Print printer = new Print(cordova.getActivity());
         printer.openPrinter(Print.DEVTYPE_USB, "RTPSO", 0, 0);
         Builder build = new Builder("RTPSO", Builder.MODEL_CHINESE);
-        // String[] printArr = printtext.split("!#%");
-        // for (int i = 0; i < printArr.length; i++) {
-        //     String[] oneprint = printArr[i].split("@$^");
-        //     if (oneprint.length > 0) {
-        //         ExplainComment(build, oneprint);
-        //     }
-        // }
-        byte clear[] = {0x1b, 0x40};
-        build.addCommand(clear);
-        build.addText(printtext + "ss\n");
-        build.addCut(Builder.CUT_FEED);
         int []status = {1};
+        String[] printArr = printtext.split("::::");
+
+        for (int i = 0; i < printArr.length; i++) {
+            String[] oneprint = printArr[i].split(";;;;");
+            if (oneprint.length > 0) {
+                ExplainComment(build, oneprint);
+            }
+        }
+        // PrintHello(build);
         printer.sendData(build, 1000, status);
         build.clearCommandBuffer();
     }
 
+    private void PrintHello(Builder build) throws AposException {
+        byte clear[] = {0x1b, 0x40};
+        build.addCommand(clear);
+        build.addText("PrintHello\n");
+        build.addCut(Builder.CUT_FEED);
+    }
+
     private void ExplainComment(Builder build, String[] oneprint) throws AposException {
         String comment = oneprint[0];
-        if (comment == "addText") {
+        if (comment.equals("addText")) {
             build.addText(oneprint[1]);
-        } else if (comment == "addTextAlign") {
+        } else if (comment.equals("addTextAlign")) {
             build.addTextAlign(Integer.parseInt(oneprint[1]));
-        } else if (comment == "clearCommandBuffer") {
+        } else if (comment.equals("clearCommandBuffer")) {
             build.clearCommandBuffer();
-        } else if (comment == "addCut") {
-            if (oneprint[1] == "") {
+        } else if (comment.equals("addCut")) {
+            if (oneprint.length == 1) {
                 build.addCut(Builder.CUT_FEED);
             } else {
                 build.addCut(Integer.parseInt(oneprint[1]));
             }
-        } else if (comment == "addTextLineSpace") {
+        } else if (comment.equals("addTextLineSpace")) {
             build.addTextLineSpace(Integer.parseInt(oneprint[1]));
-        } else if (comment == "addTextRotate") {
+        } else if (comment.equals("addTextRotate")) {
             build.addTextRotate(Integer.parseInt(oneprint[1]));
-        } else if (comment == "addTextFont") {
+        } else if (comment.equals("addTextFont")) {
             build.addTextFont(Integer.parseInt(oneprint[1]));
-        } else if (comment == "addTextSmooth") {
+        } else if (comment.equals("addTextSmooth")) {
             build.addTextSmooth(Integer.parseInt(oneprint[1]));
-        } else if (comment == "addTextDouble") {
-            if (oneprint[1] == "") {
+        } else if (comment.equals("addTextDouble")) {
+            if (oneprint.length == 1) {
                 build.addTextDouble(Builder.FALSE, Builder.FALSE);
             } else {
                 build.addTextDouble(Integer.parseInt(oneprint[1]), Integer.parseInt(oneprint[2]));
             }
-        } else if (comment == "addTextSize") {
+        } else if (comment.equals("addTextSize")) {
             build.addTextSize(Integer.parseInt(oneprint[1]), Integer.parseInt(oneprint[2]));
-        } else if (comment == "addTextStyle") {
+        } else if (comment.equals("addTextStyle")) {
             build.addTextStyle(Integer.parseInt(oneprint[1]), Integer.parseInt(oneprint[2]), Integer.parseInt(oneprint[3]), Integer.parseInt(oneprint[4]));
-        } else if (comment == "addTextPosition") {
+        } else if (comment.equals("addTextPosition")) {
             build.addTextPosition(Integer.parseInt(oneprint[1]));
-        } else if (comment == "addFeedUnit") {
+        } else if (comment.equals("addFeedUnit")) {
             build.addFeedUnit(Integer.parseInt(oneprint[1]));
-        } else if (comment == "addFeedLine") {
+        } else if (comment.equals("addFeedLine")) {
             build.addFeedLine(Integer.parseInt(oneprint[1]));
-        } else if (comment == "addBarcode") {
-            if (oneprint[2] == "") {
+        } else if (comment.equals("addBarcode")) {
+            if (oneprint.length == 2) {
                 build.addBarcode(oneprint[1], Builder.BARCODE_EAN13,
                                  Builder.HRI_BELOW, Builder.PARAM_UNSPECIFIED,
                                  2, 60);
@@ -177,21 +183,24 @@ public class apossdk extends CordovaPlugin {
                 build.addBarcode(oneprint[1], Integer.parseInt(oneprint[2]), Integer.parseInt(oneprint[3]),
                                  Integer.parseInt(oneprint[4]), Integer.parseInt(oneprint[5]), Integer.parseInt(oneprint[6]));
             }
-        } else if (comment == "addSymbol") {
+        } else if (comment.equals("addSymbol")) {
             build.addSymbol(oneprint[1], Builder.SYMBOL_QRCODE_MODEL_2, Builder.LEVEL_L, 120, 120, 0);
-        } else if (comment == "addPageBegin") {
+        } else if (comment.equals("addPageBegin")) {
             build.addPageBegin();
-        } else if (comment == "addPageEnd") {
+        } else if (comment.equals("addPageEnd")) {
             build.addPageEnd();
-        } else if (comment == "addPageArea") {
+        } else if (comment.equals("addPageArea")) {
             build.addPageArea(Integer.parseInt(oneprint[1]), Integer.parseInt(oneprint[2]), Integer.parseInt(oneprint[3]), Integer.parseInt(oneprint[4]));
-        } else if (comment == "addPageDirection") {
+        } else if (comment.equals("addPageDirection")) {
             build.addPageDirection(Integer.parseInt(oneprint[1]));
-        } else if (comment == "addPulse") {
+        } else if (comment.equals("addPulse")) {
             build.addPulse(Integer.parseInt(oneprint[1]), Integer.parseInt(oneprint[2]));
-        } else if (comment == "clear") {
+        } else if (comment.equals("clear")) {
             byte clear[] = {0x1b, 0x40};
             build.addCommand(clear);
+        }
+        else{
+            // Alert("NoThisComment:" + comment);
         }
     }
 }

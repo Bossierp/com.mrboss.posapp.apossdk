@@ -50,9 +50,17 @@ public class apossdk extends CordovaPlugin {
                 callbackContext.success(200);
                 return true;
             }
-            if ("Print".equals(action)) {
+            else if ("Print".equals(action)) {
                 String key = args.getString(0);
                 Print(key);
+                callbackContext.success(200);
+                return true;
+            }
+            else if("TestConvert".equals(action)){
+            	String key1 = args.getString(0);
+            	String key2 = args.getString(1);
+            	String key3 = args.getString(2);
+                TestConvert(key1, key2, key3);
                 callbackContext.success(200);
                 return true;
             }
@@ -84,33 +92,6 @@ public class apossdk extends CordovaPlugin {
         alertDialog.show();
     }
 
-    public void TestPrint() throws AposException {
-        Print printer = new Print(cordova.getActivity());
-        printer.openPrinter(Print.DEVTYPE_USB, "RTPSO", 0, 0);
-        Builder build = new Builder("RTPSO", Builder.MODEL_CHINESE);
-        int []status = {1};
-        byte clear[] = {0x1b, 0x40};
-        build.addCommand(clear);
-        build.addTextAlign(Builder.ALIGN_CENTER);
-        build.addTextFont(Builder.FONT_A);
-        String testStr = "打印测试:乱打一通返点的咯额尔范菲发";
-        try {
-            byte[] t_utf8 = testStr.getBytes("UTF-8");
-            // String t_utf8Toibm850 = new String(t_utf8, "ibm850");
-            // build.addText(t_utf8Toibm850);
-            build.addCommand(t_utf8);
-        } catch (UnsupportedEncodingException e) {
-            build.addText("UnsupportedEncodingException:ibm850");
-        }
-        build.addText("\n");
-        build.addText("列印測試:亂打一通返點的咯額爾范菲發\n");
-        build.addText("Print Test\n");
-        build.addText("テスト印刷\n");
-        build.addCut(Builder.CUT_FEED);
-        printer.sendData(build, 1000, status);
-        build.clearCommandBuffer();
-    }
-
     public void Print(String printtext) throws AposException {
         Print printer = new Print(cordova.getActivity());
         printer.openPrinter(Print.DEVTYPE_USB, "RTPSO", 0, 0);
@@ -138,13 +119,20 @@ public class apossdk extends CordovaPlugin {
 
     private void ExplainComment(Builder build, String[] oneprint) throws AposException {
         String comment = oneprint[0];
-        if (comment.equals("addText")) {
-            build.addText(oneprint[1]);
-        } else if (comment.equals("addTextAlign")) {
-            build.addTextAlign(Integer.parseInt(oneprint[1]));
-        } else if (comment.equals("clearCommandBuffer")) {
-            build.clearCommandBuffer();
-        } else if (comment.equals("addCut")) {
+		if (comment.equals("addText")) {
+			build.addText(oneprint[1]);
+		} else if (comment.equals("addCommand")) {
+			try {
+				byte[] GB_bytes = oneprint[2].getBytes(oneprint[1]);
+				build.addCommand(GB_bytes);
+			} catch (UnsupportedEncodingException e) {
+				build.addText("UnsupportedEncodingException:" + oneprint[1]);
+			}
+		} else if (comment.equals("addTextAlign")) {
+			build.addTextAlign(Integer.parseInt(oneprint[1]));
+		} else if (comment.equals("clearCommandBuffer")) {
+			build.clearCommandBuffer();
+		} else if (comment.equals("addCut")) {
             if (oneprint.length == 1) {
                 build.addCut(Builder.CUT_FEED);
             } else {
@@ -202,5 +190,51 @@ public class apossdk extends CordovaPlugin {
         else{
             // Alert("NoThisComment:" + comment);
         }
+    }
+    
+	public void TestPrint() throws AposException {
+        Print printer = new Print(cordova.getActivity());
+        printer.openPrinter(Print.DEVTYPE_USB, "RTPSO", 0, 0);
+        Builder build = new Builder("RTPSO", Builder.MODEL_CHINESE);
+        int []status = {1};
+        byte clear[] = {0x1b, 0x40};
+        build.addCommand(clear);
+        build.addTextAlign(Builder.ALIGN_CENTER);
+        build.addTextFont(Builder.FONT_A);
+        String testStr = "打印测试:乱打一通返点的咯额尔范菲发";
+        try {
+            byte[] t_utf8 = testStr.getBytes("UTF-8");
+            // String t_utf8Toibm850 = new String(t_utf8, "ibm850");
+            // build.addText(t_utf8Toibm850);
+            build.addCommand(t_utf8);
+        } catch (UnsupportedEncodingException e) {
+            build.addText("UnsupportedEncodingException:ibm850");
+        }
+        build.addText("\n");
+        build.addText("列印測試:亂打一通返點的咯額爾范菲發\n");
+        build.addText("Print Test\n");
+        build.addText("テスト印刷\n");
+        build.addCut(Builder.CUT_FEED);
+        printer.sendData(build, 1000, status);
+        build.clearCommandBuffer();
+    }
+
+    public void TestConvert(String msg, String fromCode, String toCode) throws AposException {
+        Print printer = new Print(cordova.getActivity());
+        printer.openPrinter(Print.DEVTYPE_USB, "RTPSO", 0, 0);
+        Builder build = new Builder("RTPSO", Builder.MODEL_CHINESE);
+        int []status = {1};
+        byte clear[] = {0x1b, 0x40};
+        build.addCommand(clear);
+        String testStr = msg;
+        try {
+            byte[] t_confrom = testStr.getBytes(fromCode);
+            String t_conto = new String(t_confrom, toCode);
+            build.addText(t_conto);
+        } catch (UnsupportedEncodingException e) {
+            build.addText("UnsupportedEncodingException:" + toCode);
+        }
+        printer.sendData(build, 1000, status);
+        build.clearCommandBuffer();
     }
 }
